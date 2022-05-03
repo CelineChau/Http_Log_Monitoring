@@ -7,34 +7,37 @@ class Http_Log {
     private int $bytes;
 
     function __construct(array $log_info) {
-        if (!empty($log_info) && count($log_info) == 7) {
+        try {
             $this->authuser = $log_info[2];
             $this->date     = $log_info[3];
             $this->request  = $log_info[4];
             $this->status   = intval($log_info[5]);
             $this->bytes    = intval($log_info[6]);
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage;
+            exit(1);
         }
     }
     
     // getter
-    public function getAuthUser() {
+    public function getAuthUser(): string {
         return $this->authuser;
     }
-    public function getDate() {
+    public function getDate(): string{
         return $this->date;
     }
-    public function getRequest() {
+    public function getRequest(): string{
         return $this->request;
     }
-    public function getStatus() {
+    public function getStatus(): int {
         return $this->status;
     }
-    public function getBytes() {
+    public function getBytes(): int {
         return $this->bytes;
     }
 
     // get Section from request
-    public function getSection() {
+    public function getSection(): string {
         $pattern  = "(/\w+)";
         $section = '';
         if(preg_match($pattern, $this->request, $matches)) {
@@ -45,7 +48,7 @@ class Http_Log {
     }
 
     // get Request methods
-    public function getRequestMethod() {
+    public function getRequestMethod(): string {
         $method = strtok($this->request, " ");
         return $method;
     }

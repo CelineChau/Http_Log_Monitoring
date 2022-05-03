@@ -10,6 +10,7 @@ $filepath = '';
 $longopts = array(
 	"file:", // file path
 	"traffic-threshold:", // traffic threshold, default = 10
+    "frequency:", // timelapse between log in millisecond
 );
 $options = getopt($shortopts, $longopts);
 
@@ -23,7 +24,7 @@ if (isset($options['file'])) {
         // echo ' file exists ';
     } else {
         echo ' [error] please check the file path ';
-        exit;
+        exit(1);
     }
 }
 
@@ -35,6 +36,8 @@ $console_log_monitoring = false;
 // threshold for hit alert
 // default 10 requests per 2 sec
 $threshold = $options['traffic-threshold'] ?? 10;
+// frequency, default 0
+$frequency = !empty($options['frequency']) ? intval($options['frequency']) : 0;
 
 // timers
 $timer_10_sec = "";
@@ -82,11 +85,13 @@ if (!empty($filepath)) {
                         $high_traffic
                     );
                     // slow logs display
-                    usleep(5000);
+                    usleep($frequency);
                 }
             }
         } catch (Exception $e) {
-            throw $e;
+            fclose($handle);
+            echo "Error: " . $e->getMessage;
+            exit(1);
         }
         fclose($handle);
     }    
@@ -123,9 +128,10 @@ if (!empty($filepath)) {
                     $high_traffic
                 );
                 // slow logs display
-                usleep(100000);
+                usleep($frequency);
             } catch (Exception $e) {
-                throw $e;
+                echo "Error: " . $e->getMessage;
+                exit(1);
             }
         }
     }

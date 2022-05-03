@@ -12,7 +12,7 @@ function timeout(int $delay, string $start_time, string $current_time): Bool {
 }
 
 // convert associative array to string format
-function mappedImplode($glue, $array, $symbol = '=') {
+function mappedImplode(string $glue, array $array, string $symbol = '='): string {
     return implode($glue, array_map(
         function($k, $v) use($symbol) {
             return $k . $symbol . $v;
@@ -23,7 +23,7 @@ function mappedImplode($glue, $array, $symbol = '=') {
 }
 
 // Output the log stats info
-function displayTrafficStat($log_infos) {
+function displayTrafficStat(array $log_infos): void {
     $output = mappedImplode(', ', $log_infos, ' : ');
     printf($output."\n");
 }
@@ -38,7 +38,7 @@ function displayLogAlert(int $hits, string $timestamp, Bool $high_traffic): void
 }
 
 // Retrieve key of the max value from associative array
-function getMaxValueFromAssoArray($array) {
+function getMaxValueFromAssoArray(array $array): string {
     $value = max($array);
     return array_search($value, $array);
 }
@@ -94,21 +94,22 @@ function httpLogMonitor(Http_Log $log, string &$timer_10_sec, array &$dict_secti
         }
 
         // add section to dictionary
-        if (isset($dict_sections[$log->getSection()])) {
-            $dict_sections[$log->getSection()] += 1;
+        $section = $log->getSection();
+        if (isset($dict_sections[$section])) {
+            $dict_sections[$section] += 1;
         } else {
-            $dict_sections[$log->getSection()] = 1;
+            $dict_sections[$section] = 1;
         }
-        ++ $requests;
+        $requests ++;
         // check request method
         if ($log->getRequestMethod() === 'GET') {
-            ++ $nb_get_requests;
+            $nb_get_requests ++;
         } else {
-            ++ $nb_post_requests;
+            $nb_post_requests ++;
         }
         // check request status
         if ($log->getStatus() === 200) {
-            ++ $success_requests;
+            $success_requests ++;
         }
     }
 }
