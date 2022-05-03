@@ -15,3 +15,8 @@ php http_log_monitoring.php
 ```
 php http_log_monitoring.php --file {filepath} --traffic-threshold {threshold}
 ```
+
+## Lauch the test
+```
+phpunit Test
+```
