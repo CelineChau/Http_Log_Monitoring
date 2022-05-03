@@ -37,8 +37,8 @@ $console_log_monitoring = false;
 $threshold = $options['traffic-threshold'] ?? 10;
 
 // timers
-$timer_10_sec = 0;
-$timer_2_min  = 0;
+$timer_10_sec = "";
+$timer_2_min  = "";
 
 // requests stats
 $hits = 0; // counting requests for alert
@@ -47,7 +47,6 @@ $requests = 0;
 $nb_get_requests = 0;
 $nb_post_requests = 0;
 $success_requests = 0;
-$row = 0;
 
 
 // Log alerting and monitoring
@@ -60,11 +59,10 @@ if (!empty($filepath)) {
         try {
             fgetcsv($handle);
             while (!feof($handle)) {
-                ++ $row;
-                // skip first header line & check line has correct format
-                if ($row > 1 && checkInputLine(fgets($handle))) {
-                    $line = str_getcsv(fgets($handle));
-                    $log = new Http_Log($line);
+                $line = fgets($handle);
+                // skip first header line
+                if (checkInputLine($line)) {
+                    $log = new Http_Log(str_getcsv($line));
                     // Log stats
                     httpLogMonitor(
                         $log,

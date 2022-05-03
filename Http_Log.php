@@ -6,7 +6,7 @@ class Http_Log {
     private int $status;
     private int $bytes;
 
-    function __construct($log_info) {
+    function __construct(array $log_info) {
         if (!empty($log_info) && count($log_info) == 7) {
             $this->authuser = $log_info[2];
             $this->date     = $log_info[3];

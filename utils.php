@@ -57,10 +57,10 @@ function checkInputLine(string $line): Bool {
 }
 
 // Handle log stats monitoring each 10 sec
-function httpLogMonitor(Http_Log $log, int &$timer_10_sec, array &$dict_sections,
+function httpLogMonitor(Http_Log $log, string &$timer_10_sec, array &$dict_sections,
     int &$requests, int &$nb_get_requests, int &$nb_post_requests, int &$success_requests) {
     if ($timer_10_sec <= $log->getDate()) {
-        if ($timer_10_sec == 0) {
+        if (empty($timer_10_sec)) {
             // Initialisation
             $timer_10_sec = $log->getDate();
         } else {
@@ -92,31 +92,31 @@ function httpLogMonitor(Http_Log $log, int &$timer_10_sec, array &$dict_sections
                 $timer_10_sec = $log->getDate();
             }
         }
-    
+
         // add section to dictionary
         if (isset($dict_sections[$log->getSection()])) {
             $dict_sections[$log->getSection()] += 1;
         } else {
             $dict_sections[$log->getSection()] = 1;
         }
-        $requests ++;
+        ++ $requests;
         // check request method
         if ($log->getRequestMethod() === 'GET') {
-            $nb_get_requests ++;
+            ++ $nb_get_requests;
         } else {
-            $nb_post_requests ++;
+            ++ $nb_post_requests;
         }
         // check request status
         if ($log->getStatus() === 200) {
-            $success_requests ++;
+            ++ $success_requests;
         }
     }
 }
 
 // Handle log alert
-function HttpLogAlert(Http_Log $log, int &$timer_2_min, int $threshold, int &$hits, Bool &$high_traffic) {
+function HttpLogAlert(Http_Log $log, string &$timer_2_min, int $threshold, int &$hits, Bool &$high_traffic) {
     if ($timer_2_min <= $log->getDate()) {
-        if ($timer_2_min === 0) {
+        if (empty($timer_2_min)) {
             // Initialisation
             $timer_2_min = $log->getDate();
         } else {
