@@ -2,6 +2,7 @@
 
 // import
 require_once(__DIR__.'/models/Http_Log.php');
+require_once(__DIR__.'/models/Http_Log_Monitoring.php');
 require_once(__DIR__.'/utils/utils.php');
 
 // args
@@ -28,29 +29,14 @@ if (isset($options['file'])) {
     }
 }
 
-// params log monitoring
-// dictionary of last 10 sec sections
-$dict_sections = [];
-$console_log_monitoring = false;
-
 // threshold for hit alert
 // default 10 requests per 2 sec
 $threshold = $options['traffic-threshold'] ?? 10;
 // frequency, default 0
 $frequency = !empty($options['frequency']) ? intval($options['frequency']) : 0;
 
-// timers
-$timer_10_sec = "";
-$timer_2_min  = "";
-
-// requests stats
-$hits = 0; // counting requests for alert
-$high_traffic = false;
-$requests = 0;
-$nb_get_requests = 0;
-$nb_post_requests = 0;
-$success_requests = 0;
-
+// Http Log Monitoring
+$http_log_monitoring = new Http_Log_Monitoring();
 
 // Log alerting and monitoring
 if (!empty($filepath)) {
@@ -67,23 +53,9 @@ if (!empty($filepath)) {
                 if (checkInputLine($line)) {
                     $log = new Http_Log(str_getcsv($line));
                     // Log stats
-                    httpLogMonitor(
-                        $log,
-                        $timer_10_sec,
-                        $dict_sections,
-                        $requests,
-                        $nb_get_requests,
-                        $nb_post_requests,
-                        $success_requests
-                    );
+                    $http_log_monitoring->httpLogMonitor($log);
                     // Log alert
-                    HttpLogAlert(
-                        $log,
-                        $timer_2_min,
-                        $threshold,
-                        $hits,
-                        $high_traffic
-                    );
+                    $http_log_monitoring->httpLogAlert($log, $threshold);
                     // slow logs display
                     usleep($frequency);
                 }
@@ -109,23 +81,9 @@ if (!empty($filepath)) {
                 $line = str_getcsv($input);
                 $log = new Http_Log($line);
                 // Log stats
-                httpLogMonitor(
-                    $log,
-                    $timer_10_sec,
-                    $dict_sections,
-                    $requests,
-                    $nb_get_requests,
-                    $nb_post_requests,
-                    $success_requests
-                );
+                $http_log_monitoring->httpLogMonitor($log);
                 // Log alert
-                HttpLogAlert(
-                    $log,
-                    $timer_2_min,
-                    $threshold,
-                    $hits,
-                    $high_traffic
-                );
+                $http_log_monitoring->HttpLogAlert($log, $threshold);
                 // slow logs display
                 usleep($frequency);
             } catch (Exception $e) {
