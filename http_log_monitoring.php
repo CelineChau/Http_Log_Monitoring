@@ -1,8 +1,8 @@
 <?php
 
 // import
-require_once(__DIR__.'/Http_Log.php');
-require_once(__DIR__.'/utils.php');
+require_once(__DIR__.'/models/Http_Log.php');
+require_once(__DIR__.'/utils/utils.php');
 
 // args
 $shortopts = "";
@@ -98,9 +98,8 @@ if (!empty($filepath)) {
 } else {
     // read from standard input
     printf("Http Log Monitoring form standard input : \n");
-    while(true) {
-        // read line from shell
-        $input = readline();
+    // read line from shell
+    while($input = readline()) {
         // check line has correct format
         if (!checkInputLine($input)) {
             printf("Please enter line with ['remotehost','rfc931','authuser','date','request','status','bytes'] : \n");

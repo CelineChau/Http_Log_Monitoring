@@ -4,7 +4,7 @@ use PHPUnit\Framework\TestCase;
 
 // import
 define('__ROOT__', dirname(dirname(__FILE__)));
-require_once(__ROOT__.'/utils.php');
+require_once(__ROOT__.'/utils/utils.php');
 
 final class UtilsTest extends TestCase
 {
