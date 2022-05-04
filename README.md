@@ -10,6 +10,8 @@ Traffic stats render :
   - **GET requests** : number of GET requests done after 10 sec,
   - **POST requests** : number of POST requests done after 10 sec,
   - **success requests** : number of successful requests after 10 sec
+ 
+**Time commitment** : around 5 hours
 
 ## Alerting
 The project shows an alert :
