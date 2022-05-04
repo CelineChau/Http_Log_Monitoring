@@ -13,9 +13,11 @@ Traffic stats render :
 
 ## Alerting
 The project shows an alert :
-  - when log traffic is high after **every 2 minutes** of log lines.
-  - when log traffic recovered
+  - when log traffic is **high** after **every 2 minutes** of log lines.
+  - when log traffic **recovered**
+
 Log traffic is considered high if the total traffic exceeds a number of requests per 2 minutes.
+
 Log traffic is considered as recovered when the total traffic drops again below the threshold of number of requests.
 This threshold value can be configured, default value = 10 requests per sec.
 
