@@ -37,6 +37,8 @@ php http_log_monitoring.php
 It will read the input from the standard input.
 Please, provide input with the following pattern : **"remotehost","rfc931","authuser","date","request","status","bytes"\n**
 
+You can stop the program with : **CTRL + D**.
+
 ### Optional arguments :
 - **--file {filepath}** : provide a filepath,
 - **--traffic-threshold {threshold}** : provide the threshold of number of requests per sec,
@@ -56,3 +58,10 @@ Test repository includes :
   - **UtilsTest.php** : test script to test utils functions
   - **HttpLogMonitoring** : test script to test the log monitoring displaying traffic stats
   - **HttpLogAlerting** : test script to test the traffic log alerting when recovered or high
+
+
+## Future improvement
+To improve the project :
+  - Improve tests with more error case
+  - When reading standard input, close the program when no input for more than 5 minutes
+  - Improve error messages 
