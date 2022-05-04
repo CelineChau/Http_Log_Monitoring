@@ -4,6 +4,7 @@
 require_once(__DIR__.'/models/Http_Log.php');
 require_once(__DIR__.'/models/Http_Log_Monitoring.php');
 require_once(__DIR__.'/utils/utils.php');
+require_once(__DIR__.'/utils/constants.php');
 
 // args
 $shortopts = "";
@@ -18,22 +19,21 @@ $options = getopt($shortopts, $longopts);
 // check file input
 // var_dump($options);
 if (isset($options['file'])) {
-    // echo 'In option file';
     // check if file exists
     if (file_exists($options['file'])) {
         $filepath = $options['file'];
-        // echo ' file exists ';
     } else {
-        echo ' [error] please check the file path ';
+        echo "Error: please check the file path \n";
         exit(1);
     }
 }
 
-// threshold for hit alert
+// threshold for hit alert, need to be > 0
 // default 10 requests per 2 sec
-$threshold = $options['traffic-threshold'] ?? 10;
-// frequency, default 0
-$frequency = !empty($options['frequency']) ? intval($options['frequency']) : 0;
+$threshold = !empty($options['traffic-threshold']) && $options['traffic-threshold'] > 0 ? $options['traffic-threshold'] : DEFAULT_THRESHOLD;
+
+// frequency (slow log display), default 0
+$frequency = !empty($options['frequency']) ? intval($options['frequency']) : DEFAULT_FREQUENCY;
 
 // Http Log Monitoring
 $http_log_monitoring = new Http_Log_Monitoring();
@@ -62,7 +62,7 @@ if (!empty($filepath)) {
             }
         } catch (Exception $e) {
             fclose($handle);
-            echo "Error: " . $e->getMessage;
+            echo "Error: " . $e->getMessage . "\n";
             exit(1);
         }
         fclose($handle);
@@ -87,7 +87,7 @@ if (!empty($filepath)) {
                 // slow logs display
                 usleep($frequency);
             } catch (Exception $e) {
-                echo "Error: " . $e->getMessage;
+                echo "Error: " . $e->getMessage . "\n";
                 exit(1);
             }
         }

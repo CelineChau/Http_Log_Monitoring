@@ -14,7 +14,7 @@ class Http_Log {
             $this->status   = intval($log_info[5]);
             $this->bytes    = intval($log_info[6]);
         } catch (Exception $e) {
-            echo "Error: " . $e->getMessage;
+            echo "Error: " . $e->getMessage . "\n";
             exit(1);
         }
     }
